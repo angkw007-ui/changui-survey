@@ -82,7 +82,7 @@ td,th{border:1px solid var(--line);padding:7px 10px;text-align:left}th{backgroun
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* ★ 앱스크립트 웹 앱 URL(…/exec)을 아래에 붙여 넣으세요 (기존 index.html의 API 줄을 그대로 복사) */
-const API='https://script.google.com/macros/s/AKfycbwOQB_ZGJ-exItCXMR2-10dGgjuUKzOm2JV8JAxEjvYJXB6ESzN1Aca38SBXOuFrNIuUw/exec';
+const API='여기에_웹앱_URL을_붙여넣으세요';
 const DEV=localStorage.getItem('dev')||(()=>{const v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('dev',v);return v})();
 let TOK=sessionStorage.getItem('tok')||'';
 async function rpc(fn,...args){
@@ -214,12 +214,29 @@ function admin(){
 }
 async function loadList(){
   try{LIST=await rpc('listSurveys')}catch(e){$('#pane').innerHTML=`<div class=card>${esc(e.message)}</div>`;return}
-  $('#pane').innerHTML=`<div class=card><h3>새 설문 만들기</h3><div class=row><input id=nt placeholder="설문 제목 (예: 2027학년도 학사력 의견 수렴)" style="flex:1;min-width:220px" maxlength=100><button class=p onclick=mk()>만들기</button></div></div>`+
+  const dc=dupCount();
+  $('#pane').innerHTML=(dc?`<div class="card tint row"><span style="flex:1">같은 제목이고 응답이 없는 중복 설문이 <b>${dc}개</b> 있습니다.</span><button class=p onclick=dedupe()>중복 설문 정리</button></div>`:'')+`<div class=card><h3>새 설문 만들기</h3><div class=row><input id=nt placeholder="설문 제목 (예: 2027학년도 학사력 의견 수렴)" style="flex:1;min-width:220px" maxlength=100><button id=mkb class=p onclick=mk()>만들기</button></div></div>`+
   (LIST.length?LIST.map(s=>`<div class=card><small>${esc(s.created)} · 응답 ${s.n}건 · ${s.open=='N'?'응답 중지':'응답 받는 중'}</small><h3>${esc(s.title)}</h3><div class=row><button class=p onclick="openS('${s.id}')">관리</button><button onclick="copyLink('${s.id}')">링크 복사</button><button onclick="openS('${s.id}','res')">결과 보기</button><button onclick="delS('${s.id}')">삭제</button></div></div>`).join(''):'<div class=card>아직 만든 설문이 없습니다. 위에서 제목을 입력해 첫 설문을 만들어 보세요.</div>');
 }
+let busy=false;
 async function mk(){
+  if(busy)return;
   const t=$('#nt').value.trim();if(!t)return alert('설문 제목을 입력해 주세요.');
-  try{const id=await rpc('createSurvey',t);await openS(id,'set')}catch(e){alert(e.message||e)}
+  busy=true;const b=$('#mkb');b.disabled=true;b.textContent='만드는 중…';
+  try{const id=await rpc('createSurvey',t);await openS(id,'set')}
+  catch(e){alert(e.message||e);const b2=$('#mkb');if(b2){b2.disabled=false;b2.textContent='만들기'}}
+  finally{busy=false}
+}
+function dupCount(){
+  const g={};LIST.forEach(s=>(g[s.title]=g[s.title]||[]).push(s));let c=0;
+  Object.values(g).forEach(a=>{if(a.length<2)return;const z=a.filter(s=>s.n==0).length;c+=a.some(s=>s.n>0)?z:z-1});
+  return c;
+}
+async function dedupe(){
+  if(!confirm('같은 제목이고 응답이 0건인 중복 설문을 삭제합니다.\n응답이 있는 설문은 삭제되지 않습니다. 계속할까요?'))return;
+  $('#pane').innerHTML='<div class=card>정리하는 중… (설문 수에 따라 시간이 걸립니다)</div>';
+  try{const n=await rpc('dedupeSurveys');alert(n+'개를 정리했습니다.')}catch(e){alert(e.message||e)}
+  loadList();
 }
 async function openS(id,t='set'){
   try{const d=await rpc('init',id);SID=id;D=d;D.admin=true;tab=t;render();scrollTo(0,0)}catch(e){alert(e.message||e)}
