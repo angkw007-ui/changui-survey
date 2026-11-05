@@ -82,7 +82,7 @@ td,th{border:1px solid var(--line);padding:7px 10px;text-align:left}th{backgroun
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* ★ 앱스크립트 웹 앱 URL(…/exec)을 아래에 붙여 넣으세요 (기존 index.html의 API 줄을 그대로 복사) */
-const API='https://script.google.com/macros/s/AKfycbwaYhHATdRRHZOau1NtRhz-NgXy5CWqoj4ZI2uC07XXgaFtPilzmAwYWK7HGfKrTbV_Gg/exec';
+const API='https://script.google.com/macros/s/AKfycbxrikoYK8VH1lCRvD5EQLCDrz-nuuTXYmdUDhHD7Ms5xHMQ4k_Gss3cu43w2lQGo7AhDQ/exec';
 const DEV=localStorage.getItem('dev')||(()=>{const v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('dev',v);return v})();
 let TOK=sessionStorage.getItem('tok')||'';
 async function rpc(fn,...args){
