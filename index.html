@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html lang="ko"><head><link rel="preconnect" href="https://script.google.com"><title>창의예중 설문 웹앱</title><meta charset="utf-8">
+<html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://script.google.com"><title>창의예중 설문 웹앱</title>
 <style>
 :root{--navy:#4a2433;--navy2:#d9779a;--gold:#d9577e;--hero:#fde9ef;--bg:#fbf4f6;--line:#f1dce3;--tint:#fcdfe8;--t:#2d1a22;--m:#7a6670}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font:15px/1.65 'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;color:var(--t);background:var(--bg)}
-.shell{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
-.side{background:#fff;border-right:1px solid var(--line);padding:28px 20px;position:sticky;top:0;height:100vh;overflow:auto}
-.brand{font-size:21px;font-weight:800;line-height:1.3;color:var(--navy);margin-bottom:26px}
+body{margin:0;font:15px/1.65 'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;color:var(--t);background:var(--bg);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;max-width:1120px;margin:0 auto;padding:24px 20px 60px;align-items:start}
+.side{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 14px;position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto}
+.brand{font-size:20px;font-weight:800;line-height:1.3;color:var(--navy);margin:0 8px 22px;word-break:keep-all}
 .brand small{display:block;font-size:12px;font-weight:500;color:var(--m);margin-bottom:4px}
-.side nav{display:flex;flex-direction:column;gap:2px;margin-bottom:18px}
+.side nav{display:flex;flex-direction:column;gap:2px;margin-bottom:16px}
 .side nav a{padding:9px 12px;border-radius:8px;cursor:pointer;color:#344054;font-size:14px}
 .side nav a:hover{background:var(--bg)}
 .side nav a.on{background:var(--tint);color:var(--navy);font-weight:700}
-.side nav.sub{border-top:1px solid var(--line);padding-top:14px}
-main{padding:24px 28px 60px;max-width:900px;width:100%}
+.side nav.sub{border-top:1px solid var(--line);padding-top:14px;margin-bottom:0}
+main{min-width:0}
+.solo{max-width:720px;margin:40px auto;padding:0 16px}
 .hero{background:var(--hero);border:1px solid #f6cfdb;color:var(--navy);border-radius:16px;padding:30px 32px;margin-bottom:24px}
-.hero .tags{display:flex;justify-content:space-between;font-size:12px;margin-bottom:18px}
+.hero .tags{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;margin-bottom:18px}
 .hero .tags span{background:rgba(217,87,126,.12);border-radius:999px;padding:2px 12px}
 .hero .gold{color:#b83256;font-weight:700;font-size:14px}
-.hero h1{font-size:34px;line-height:1.25;margin:4px 0 10px}
+.hero h1{font-size:34px;line-height:1.25;margin:4px 0 10px;word-break:keep-all}
 .hero p{margin:0 0 16px;color:#6b4552}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chips span{border:1px solid #efbccb;background:#fff;border-radius:999px;padding:3px 12px;font-size:13px;color:#8a3a55}
@@ -36,7 +38,6 @@ label{display:block;margin:5px 0}
 button{padding:9px 16px;border:1px solid #e6cbd4;background:#fff;border-radius:8px;cursor:pointer;font:inherit;color:var(--navy)}
 button.p{background:var(--gold);border-color:var(--gold);font-weight:700;color:#fff}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.pdfbtn button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 .modal{position:fixed;inset:0;background:rgba(45,26,34,.5);display:none;align-items:center;justify-content:center;z-index:9}
 .mbox{background:#fff;border-radius:12px;width:min(980px,95vw);height:92vh;padding:12px;display:flex;flex-direction:column;gap:8px}
 .mbox iframe{flex:1;width:100%;border:1px solid var(--line);border-radius:8px}
@@ -47,20 +48,20 @@ td,th{border:1px solid var(--line);padding:7px 10px;text-align:left}th{backgroun
 .req{color:#c2410c;font-weight:700}.m{color:var(--m);font-size:13px}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}.tw table{min-width:440px}
 .lnk{padding:10px 14px;border:1px solid #e6cbd4;border-radius:8px;color:var(--navy);text-decoration:none}
-body{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+#lg{align-items:center}#lg .mbox{width:min(340px,92vw);height:auto;border-radius:12px;padding:20px;gap:12px}
 @media(max-width:760px){
   html{scroll-padding-top:120px}
   body{font-size:16px}
-  .shell{display:block}
-  .side{position:sticky;top:0;z-index:5;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 14px 6px;overflow:visible}
-  .brand{font-size:17px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shell{display:block;padding:0}
+  .side{position:sticky;top:0;z-index:5;max-height:none;border-radius:0;border-width:0 0 1px;padding:10px 14px 6px;overflow:visible}
+  .brand{font-size:17px;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .brand small{display:none}
   .side nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:4px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
   .side nav a{white-space:nowrap;padding:10px 14px;font-size:15px}
   .side nav.sub{border-top:0;padding-top:0;margin-bottom:6px}
   main{padding:14px 14px calc(40px + env(safe-area-inset-bottom))}
+  .solo{margin:16px auto}
   .hero{padding:20px;border-radius:14px;margin-bottom:16px}.hero h1{font-size:25px}
-  .hero .tags{flex-wrap:wrap;gap:6px}
   h2{font-size:18px;margin:20px 0 10px}
   .card{padding:16px}
   input,select,textarea{font-size:16px;padding:12px}
@@ -71,17 +72,17 @@ body{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
   .lb{width:100%!important}
   .modal{align-items:stretch}
   .mbox{width:100vw;height:100dvh;border-radius:0;padding:10px 10px calc(10px + env(safe-area-inset-bottom))}
+  #lg{align-items:center}#lg .mbox{width:min(340px,92vw);height:auto;border-radius:12px;padding:20px}
 }
-@media print{body{background:#fff}.shell{display:block}.np{display:none!important}main{padding:0;max-width:none}.card{break-inside:avoid;border-color:#999}}
-#lg{align-items:center}#lg .mbox{width:min(340px,92vw);height:auto;border-radius:12px;padding:20px;gap:12px}
+@media print{body{background:#fff}.shell{display:block;padding:0}.np{display:none!important}.card{break-inside:avoid;border-color:#999}}
 </style></head><body><div id="app" style="padding:24px">불러오는 중…</div>
 <div id="lg" class="modal np" onclick="if(event.target==this)this.style.display='none'"><div class="mbox" role="dialog" aria-modal="true"><b>관리자 확인</b><input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호" onkeydown="if(event.key=='Enter')doLogin()"><div class="row"><button onclick="$('#lg').style.display='none'">취소</button><button class="p" onclick="doLogin()">확인</button></div></div></div>
 <div id="vw" class="modal np" onclick="if(event.target==this)closeV()"><div class="mbox" role="dialog" aria-modal="true"><div class="row"><b id="vt" style="flex:1"></b><a id="vo" class="lnk" target="_blank">새 창에서 열기</a><button onclick="closeV()">닫기</button></div><iframe id="pv" title="검토 자료"></iframe></div></div>
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-/* ★ 앱스크립트 웹 앱 URL(…/exec)을 아래에 붙여 넣으세요 */
-const API='https://script.google.com/macros/s/AKfycbyffSYvARfIOIHzXVj6Lt5crHSrw50s-fZ67UAGHhZTijbOwvK25reOzJO2Ay06wCgZ/exec';
+/* ★ 앱스크립트 웹 앱 URL(…/exec)을 아래에 붙여 넣으세요 (기존 index.html의 API 줄을 그대로 복사) */
+const API='https://script.google.com/macros/s/AKfycby4qObdA0xCFEBNXkGhbbDdIu6BDIPVQgHqH2zmCVmyvQw3DIwYSzsfulWLXFtAkEQzuA/exec';
 const DEV=localStorage.getItem('dev')||(()=>{const v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('dev',v);return v})();
 let TOK=sessionStorage.getItem('tok')||'';
 async function rpc(fn,...args){
@@ -95,30 +96,48 @@ async function rpc(fn,...args){
   return j.data;
 }
 const T={short:'단답형',long:'장문형',radio:'객관식(단일 선택)',check:'체크박스(복수 선택)',select:'드롭다운',scale:'선형 배율',date:'날짜'};
-let D,mode='survey',tab='set',R;
-/* 빠른 첫 화면: 지난번 받아 둔 설문을 먼저 보여 주고, 최신 내용은 뒤에서 갱신 */
-let cached=null;
-try{cached=localStorage.getItem('pub');if(cached){D=JSON.parse(cached);D.admin=false;render()}}catch(e){cached=null}
-rpc('init').then(d=>{
-  const sig=JSON.stringify(Object.assign({},d,{admin:false}));
-  try{localStorage.setItem('pub',sig)}catch(e){}
-  if(sig!==cached){D=d;render()}else D.admin=d.admin;
-}).catch(e=>{if(!D)$('#app').textContent=e.message});
+const QS=new URLSearchParams(location.search);
+let SID=QS.get('s')||'',D=null,mode='survey',tab='list',LIST=[],R,X;
+const linkOf=id=>location.origin+location.pathname+'?s='+id;
 const go=id=>{const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})};
+const hasS=()=>!!(SID&&D&&D.cfg);
+
+/* ===== 시작: 지난번 받아 둔 설문을 먼저 보여 주고 최신 내용은 뒤에서 갱신 ===== */
+(async()=>{
+  let cached=null;
+  if(SID){try{cached=localStorage.getItem('pub_'+SID);if(cached){D=JSON.parse(cached);D.admin=false;render()}}catch(e){cached=null}}
+  try{
+    const d=await rpc('init',SID);
+    if(SID&&d.cfg){try{localStorage.setItem('pub_'+SID,JSON.stringify(Object.assign({},d,{admin:false})))}catch(e){}}
+    const same=cached&&JSON.stringify(Object.assign({},d,{admin:false}))===cached;
+    D=d;
+    if(d.admin&&!SID){mode='admin';tab='list'}
+    if(!same)render();
+  }catch(e){if(!D){D={err:e.message,admin:false};render()}}
+})();
 
 function render(){
-  const adm=mode=='admin';
-  const nav=adm?[['set','설문 설정'],['q','문항 편집'],['mat','자료 관리'],['res','결과 보기']].map(([k,l])=>`<a tabindex=0 class="${tab==k?'on':''}" onclick="tab='${k}';render()">${l}</a>`).join('')
-    :(D.mats.length&&!D.st.msg?`<a tabindex=0 onclick="go('sec-mat')">검토 자료</a>`:'')+(D.st.msg?'':`<a tabindex=0 onclick="go('sec-q')">의견 작성</a>`);
+  const adm=mode=='admin',has=hasS();
+  let nav='';
+  if(adm){
+    nav=`<a tabindex=0 class="${tab=='list'?'on':''}" onclick="tab='list';render()">설문 목록</a>`+(has?[['set','설문 설정'],['q','문항 편집'],['mat','자료 관리'],['link','링크 공유'],['res','결과 보기']].map(([k,l])=>`<a tabindex=0 class="${tab==k?'on':''}" onclick="tab='${k}';render()">${l}</a>`).join(''):'');
+  }else if(has&&!D.st.msg){
+    nav=(D.mats.length?`<a tabindex=0 onclick="go('sec-mat')">검토 자료</a>`:'')+`<a tabindex=0 onclick="go('sec-q')">의견 작성</a>`;
+  }
+  const bt=adm?(has&&tab!='list'?D.cfg.title:'설문 관리'):(has?D.cfg.title:'창의예중 설문');
   $('#app').removeAttribute('style');
-  $('#app').innerHTML=`<div class=shell><aside class="side np"><div class=brand><small>${adm?'관리자 모드':'창의예중 설문 웹앱'}</small>${esc(D.cfg.title)}</div><nav>${nav}</nav><nav class=sub><a tabindex=0 onclick="toggleAdmin()">${adm?'참여자 화면 보기':'관리자 모드'}</a>${adm?`<a tabindex=0 onclick="logout()">로그아웃</a>`:''}</nav></aside><main>${adm?admin():survey()}</main></div>`;
-  if(adm&&tab=='res')showRes();
+  $('#app').innerHTML=`<div class=shell><aside class="side np"><div class=brand><small>${adm?'관리자 모드':'창의예중 설문 웹앱'}</small>${esc(bt)}</div><nav>${nav}</nav><nav class=sub><a tabindex=0 onclick="toggleAdmin()">${adm?'참여자 화면 보기':'관리자 모드'}</a>${adm?`<a tabindex=0 onclick="logout()">로그아웃</a>`:''}</nav></aside><main>${adm?admin():survey()}</main></div>`;
+  if(adm&&tab=='list')loadList();
+  if(adm&&tab=='res'&&has)showRes();
 }
 
 /* ===== 참여자 화면 ===== */
 function survey(){
+  if(!D)return '';
+  if(D.err)return `<section class=hero><div class=gold>안내</div><h1>설문을 열 수 없습니다</h1><p>${esc(D.err)}</p></section>`;
+  if(D.none)return `<section class=hero><div class=tags><span>창의예중 설문 웹앱</span></div><div class=gold>안내</div><h1>설문 링크로 접속해 주세요</h1><p>안내받은 설문 링크를 눌러 참여할 수 있습니다.</p></section>`;
   const c=D.cfg,end=c.end?'마감 '+c.end.replace('T',' '):'';
-  let h=`<section class=hero><div class=tags><span>창의예중 설문 웹앱</span>${end?`<span>${esc(end)}</span>`:'<span></span>'}</div>
+  let h=`<section class=hero><div class=tags><span>창의예중 설문 웹앱</span>${end?`<span>${esc(end)}</span>`:''}</div>
     <div class=gold>${D.mats.length?'자료를 읽고 의견을 남겨 주세요':'의견을 남겨 주세요'}</div><h1>${esc(c.title)}</h1>
     <p>${esc(c.desc).replace(/\n/g,'<br>')}</p><div class=chips><span>검토 자료 ${D.mats.length}건</span><span>질문 ${D.qs.length}개</span>${c.once=='Y'?'<span>1인 1회</span>':''}<span>${c.anon=='Y'?'무기명':'기명'}</span></div></section>`;
   if(D.st.msg)return h+`<div class=card>${esc(D.st.msg)}</div>`;
@@ -135,23 +154,11 @@ function openV(i){
 }
 function closeV(){$('#vw').style.display='none';$('#pv').src='about:blank'}
 document.addEventListener('keydown',e=>{if(e.key=='Escape'){closeV();$('#lg').style.display='none'}});
-/* 관리자 로그인 */
-function toggleAdmin(){
-  if(mode=='admin'){mode='survey';render();scrollTo(0,0)}
-  else if(D.admin){mode='admin';tab='set';render();scrollTo(0,0)}
-  else{$('#lg').style.display='flex';setTimeout(()=>$('#pw').focus(),50)}
-}
-async function doLogin(){
-  try{TOK=await rpc('login',$('#pw').value);sessionStorage.setItem('tok',TOK);D=await rpc('init');$('#pw').value='';$('#lg').style.display='none';mode='admin';tab='set';render();scrollTo(0,0)}
-  catch(e){alert(e.message||e);$('#pw').value=''}
-}
-async function logout(){try{await rpc('logout')}catch(e){}TOK='';sessionStorage.removeItem('tok');try{D=await rpc('init')}catch(e){}mode='survey';render();scrollTo(0,0)}
-/* 기명 / 무기명: 관리자 설정에 따름 */
 function idCard(){
   if(D.cfg.anon=='Y')return `<div class=card><small>응답자 표시</small><h3>무기명 설문입니다</h3><p class=m style="margin:0">이름이 기록되지 않습니다.</p></div>`;
   return `<div class=card><small>응답자 표시 · <span class=req>필수</span></small><h3>이름</h3><input id=nm placeholder="이름을 입력하세요" maxlength=30><p class=m style="margin:8px 0 0">기명 설문입니다. 입력한 이름은 관리자에게 보입니다.</p></div>`;
 }
-function who(){return {mode:D.cfg.anon=='Y'?'anon':'named',name:($('#nm')||{}).value||''}}
+const who=()=>({mode:D.cfg.anon=='Y'?'anon':'named',name:($('#nm')||{}).value||''});
 function inp(q){
   const n=`data-q="${q.id}"`;
   switch(q.type){
@@ -175,25 +182,80 @@ function collect(){
   return a;
 }
 async function send(){
-  try{const r=await rpc('submit',collect(),who());$('#app').innerHTML=`<div class=shell><main><section class=hero><div class=gold>제출 완료</div><h1>제출되었습니다</h1><p>${esc(r)}</p></section></main></div>`}
+  try{const r=await rpc('submit',SID,collect(),who());$('#app').innerHTML=`<div class=solo><section class=hero><div class=gold>제출 완료</div><h1>제출되었습니다</h1><p>${esc(r)}</p></section></div>`;scrollTo(0,0)}
   catch(e){alert(e.message||e)}
 }
 
-/* ===== 관리자 화면 ===== */
-function admin(){
-  const title={set:'설문 설정',q:'문항 편집',mat:'자료 관리',res:'결과 보기'}[tab];
-  return `<h2 class=np style="margin-top:4px">${title}</h2><div id=pane>${{set:setUI,q:qUI,mat:matUI,res:()=>'<div class=card>불러오는 중…</div>'}[tab]()}</div>`;
+/* ===== 관리자 로그인 ===== */
+function toggleAdmin(){
+  if(mode=='admin'){mode='survey';render();scrollTo(0,0)}
+  else if(D&&D.admin){mode='admin';tab='list';render();scrollTo(0,0)}
+  else{$('#lg').style.display='flex';setTimeout(()=>$('#pw').focus(),50)}
 }
-/* 네이버폼 설문 설정 항목: 응답 기간, 응답 수 제한, 1인 1회, 응답자 정보 수집, 완료 메시지 */
+async function doLogin(){
+  try{
+    TOK=await rpc('login',$('#pw').value);sessionStorage.setItem('tok',TOK);
+    try{D=await rpc('init',SID)}catch(e){D={admin:true,none:true}}
+    $('#pw').value='';$('#lg').style.display='none';mode='admin';tab='list';render();scrollTo(0,0);
+  }catch(e){alert(e.message||e);$('#pw').value=''}
+}
+async function logout(){
+  try{await rpc('logout')}catch(e){}
+  TOK='';sessionStorage.removeItem('tok');SID=QS.get('s')||'';mode='survey';
+  try{D=await rpc('init',SID)}catch(e){D={err:e.message,admin:false}}
+  render();scrollTo(0,0);
+}
+
+/* ===== 관리자: 설문 목록 ===== */
+function admin(){
+  const t={list:'설문 목록',set:'설문 설정',q:'문항 편집',mat:'자료 관리',link:'링크 공유',res:'결과 보기'}[tab],need=tab!='list'&&!hasS();
+  const body=need?'<div class=card>먼저 설문 목록에서 설문을 선택해 주세요.</div>':{list:()=>'<div class=card>불러오는 중…</div>',set:setUI,q:qUI,mat:matUI,link:linkUI,res:()=>'<div class=card>불러오는 중…</div>'}[tab]();
+  return `<h2 class=np style="margin-top:4px">${t}${tab!='list'&&!need?` <span class=m>· ${esc(D.cfg.title)}</span>`:''}</h2><div id=pane>${body}</div>`;
+}
+async function loadList(){
+  try{LIST=await rpc('listSurveys')}catch(e){$('#pane').innerHTML=`<div class=card>${esc(e.message)}</div>`;return}
+  $('#pane').innerHTML=`<div class=card><h3>새 설문 만들기</h3><div class=row><input id=nt placeholder="설문 제목 (예: 2027학년도 학사력 의견 수렴)" style="flex:1;min-width:220px" maxlength=100><button class=p onclick=mk()>만들기</button></div></div>`+
+  (LIST.length?LIST.map(s=>`<div class=card><small>${esc(s.created)} · 응답 ${s.n}건 · ${s.open=='N'?'응답 중지':'응답 받는 중'}</small><h3>${esc(s.title)}</h3><div class=row><button class=p onclick="openS('${s.id}')">관리</button><button onclick="copyLink('${s.id}')">링크 복사</button><button onclick="openS('${s.id}','res')">결과 보기</button><button onclick="delS('${s.id}')">삭제</button></div></div>`).join(''):'<div class=card>아직 만든 설문이 없습니다. 위에서 제목을 입력해 첫 설문을 만들어 보세요.</div>');
+}
+async function mk(){
+  const t=$('#nt').value.trim();if(!t)return alert('설문 제목을 입력해 주세요.');
+  try{const id=await rpc('createSurvey',t);await openS(id,'set')}catch(e){alert(e.message||e)}
+}
+async function openS(id,t='set'){
+  try{const d=await rpc('init',id);SID=id;D=d;D.admin=true;tab=t;render();scrollTo(0,0)}catch(e){alert(e.message||e)}
+}
+async function delS(id){
+  const s=LIST.find(x=>x.id==id);
+  if(!confirm(`"${s?s.title:id}" 설문을 삭제할까요?\n응답 ${s?s.n:0}건과 업로드한 자료가 모두 삭제되며 되돌릴 수 없습니다.`))return;
+  try{await rpc('deleteSurvey',id);if(SID==id){SID='';D={admin:true,none:true}}loadList()}catch(e){alert(e.message||e)}
+}
+
+/* ===== 관리자: 링크 공유 ===== */
+async function copyLink(id){
+  const u=linkOf(id);
+  try{await navigator.clipboard.writeText(u);alert('링크를 복사했습니다.\n'+u)}catch(e){prompt('아래 링크를 복사하세요',u)}
+}
+async function copyMsg(){
+  const c=D.cfg,t=`[창의예중] ${c.title}\n${c.end?'마감: '+c.end.replace('T',' ')+'\n':''}아래 링크에서 자료를 확인하시고 의견을 남겨 주세요.\n${linkOf(SID)}`;
+  try{await navigator.clipboard.writeText(t);alert('안내 문구를 복사했습니다.')}catch(e){prompt('아래 문구를 복사하세요',t)}
+}
+function linkUI(){
+  const u=linkOf(SID);
+  return `<div class=card><h3>참여자에게 보낼 링크</h3><input id=lk readonly value="${esc(u)}" onclick="this.select()">
+  <div class=row style="margin-top:10px"><button class=p onclick="copyLink('${SID}')">링크 복사</button><button onclick="copyMsg()">안내 문구 복사</button><a class=lnk href="${esc(u)}" target=_blank>참여자 화면 열기</a></div>
+  <p class=m>이 링크로 접속한 사람은 이 설문에만 참여할 수 있습니다. 설문마다 링크가 다릅니다. 응답을 멈추려면 설문 설정에서 "응답 받기"를 끄세요.</p></div>`;
+}
+
+/* ===== 관리자: 설정 / 문항 / 자료 / 결과 ===== */
 const SF=[['title','설문 제목','text'],['desc','설문 설명','area'],['start','응답 시작 일시','datetime-local'],['end','응답 마감 일시','datetime-local'],['limit','응답 수 제한 (0 = 제한 없음)','number'],['done','제출 완료 메시지','text']];
-const SC=[['once','1인 1회만 응답']];
+const SC=[['open','응답 받기 (끄면 접속해도 응답할 수 없음)'],['once','1인 1회만 응답 (같은 기기 기준)']];
 function setUI(){
   const c=D.cfg;
-  return `<div class=card>${SF.map(([k,l,t])=>`<label>${l}${t=='area'?`<textarea rows=3 id=f_${k}>${esc(c[k])}</textarea>`:`<input type=${t} id=f_${k} value="${esc(c[k])}">`}</label>`).join('')}${SC.map(([k,l])=>`<label><input type=checkbox id=f_${k} ${c[k]=='Y'?'checked':''}>${l}</label>`).join('')}<label>응답자 표시 방식<select id=f_anon>${[['N','기명 (참여자가 이름을 입력)'],['Y','무기명 (이름을 기록하지 않음)']].map(([v,l])=>`<option value=${v} ${c.anon==v?'selected':''}>${l}</option>`).join('')}</select></label><br><button class=p onclick=saveSet()>설정 저장</button></div>`;
+  return `<div class=card>${SF.map(([k,l,t])=>`<label>${l}${t=='area'?`<textarea rows=3 id=f_${k}>${esc(c[k])}</textarea>`:`<input type=${t} id=f_${k} value="${esc(c[k])}">`}</label>`).join('')}${SC.map(([k,l])=>`<label><input type=checkbox id=f_${k} ${c[k]!='N'?'checked':''}>${l}</label>`).join('')}<label>응답자 표시 방식<select id=f_anon>${[['N','기명 (참여자가 이름을 입력)'],['Y','무기명 (이름을 기록하지 않음)']].map(([v,l])=>`<option value=${v} ${c.anon==v?'selected':''}>${l}</option>`).join('')}</select></label><br><button class=p onclick=saveSet()>설정 저장</button></div>`;
 }
 async function saveSet(){
   const o={};SF.forEach(([k])=>o[k]=$('#f_'+k).value);SC.forEach(([k])=>o[k]=$('#f_'+k).checked?'Y':'N');o.anon=$('#f_anon').value;
-  try{await rpc('saveCfg',o);D.cfg=o;alert('저장되었습니다.')}catch(e){alert(e.message||e)}
+  try{await rpc('saveCfg',SID,o);Object.assign(D.cfg,o);alert('저장되었습니다.');render()}catch(e){alert(e.message||e)}
 }
 function qUI(){
   const nq=`D.qs.push({id:'q'+Date.now(),type:'radio',title:'',required:false,options:['옵션 1','옵션 2'],min:1,max:5,minL:'',maxL:''});render()`;
@@ -207,36 +269,34 @@ function qUI(){
   +`<div class=row><button onclick="${nq}">질문 추가</button><button class=p onclick=saveQ()>문항 저장</button></div>`;
 }
 function mv(i,d){const j=i+d;if(j<0||j>=D.qs.length)return;[D.qs[i],D.qs[j]]=[D.qs[j],D.qs[i]];render()}
-async function saveQ(){try{await rpc('saveQs',D.qs);alert('저장되었습니다.')}catch(e){alert(e.message||e)}}
+async function saveQ(){try{await rpc('saveQs',SID,D.qs);alert('저장되었습니다.')}catch(e){alert(e.message||e)}}
 
 function matUI(){
-  return `<div class=card><h3>PDF 자료 올리기</h3><input type=file id=pf accept=application/pdf multiple><br><br><button class=p onclick=up()>업로드</button><p class=m>파일당 10MB 이하를 권장합니다. 올린 파일은 같은 학교 계정 사용자에게 보기 권한으로 공유됩니다.</p></div>
+  return `<div class=card><h3>PDF 자료 올리기</h3><input type=file id=pf accept=application/pdf multiple><br><br><button class=p onclick=up()>업로드</button><p class=m>파일당 10MB 이하를 권장합니다. 올린 파일은 링크가 있는 사람 누구나 볼 수 있으니 개인정보가 담긴 문서는 올리지 마세요.</p></div>
   <div class=card><h3>등록된 자료</h3>${D.mats.map(m=>`<div class=row style="margin:6px 0"><span style="flex:1">${esc(m.name)}</span><button onclick="del('${m.id}')">삭제</button></div>`).join('')||'<p class=m>등록된 자료가 없습니다.</p>'}</div>`;
 }
 async function up(){
   const fs=[...$('#pf').files];if(!fs.length)return alert('파일을 선택해 주세요.');
   for(const f of fs){
     const b=await new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result.split(',')[1]);x.readAsDataURL(f)});
-    try{D.mats=await rpc('uploadFile',f.name,b)}catch(e){return alert(e.message||e)}
+    try{D.mats=await rpc('uploadFile',SID,f.name,b)}catch(e){return alert(e.message||e)}
   }
   render();
 }
-async function del(id){if(confirm('이 자료를 삭제할까요?')){D.mats=await rpc('delFile',id);render()}}
+async function del(id){if(confirm('이 자료를 삭제할까요?')){try{D.mats=await rpc('delFile',SID,id);render()}catch(e){alert(e.message||e)}}}
 
-/* 결과: 표 + 막대그래프 */
 async function showRes(){
-  try{R=await rpc('results')}catch(e){$('#pane').innerHTML=`<div class=card>${esc(e.message||e)}</div>`;return}
+  try{R=await rpc('results',SID)}catch(e){$('#pane').innerHTML=`<div class=card>${esc(e.message)}</div>`;return}
   $('#pane').innerHTML=`<div class="card tint np row"><button onclick=print()>인쇄 / PDF 저장</button><button class=p onclick=dl()>한글·워드용 파일 만들기</button><span id=dl class=m></span></div>
   <div class=card><h3>${esc(D.cfg.title)} - 결과</h3>총 응답 <b>${R.total}</b>건</div>`+
   R.items.map((t,i)=>`<div class=card><small>질문 ${i+1} · ${t.n}명 응답</small><h3>${esc(t.q.title)}</h3>${t.counts?
     `<div class=tw><table><tr><th>항목</th><th style="width:70px">응답수</th><th style="width:70px">비율</th><th style="width:35%">그래프</th></tr>${t.counts.map(([k,v])=>{const p=t.n?Math.round(v/t.n*1000)/10:0;return `<tr><td>${esc(k)}</td><td>${v}</td><td>${p}%</td><td><div class=bar><i style="width:${p}%"></i></div></td></tr>`}).join('')}</table></div>${t.avg!=null?`<p>평균 <b>${t.avg}</b></p>`:''}`
     :`<table>${t.texts.map((x,j)=>`<tr><td style="width:40px">${j+1}</td><td>${esc(x).replace(/\n/g,'<br>')}</td></tr>`).join('')||'<tr><td>응답 없음</td></tr>'}</table>`}</div>`).join('');
 }
-let X;
 async function dl(){
   $('#dl').textContent='파일을 만드는 중… (10~30초)';
-  try{X=await rpc('exportDoc');
-    $('#dl').innerHTML=`<a href="#" onclick="sv('docx');return false">Word(.docx) 받기</a> · <a href="#" onclick="sv('xlsx');return false">Excel 받기</a> · <a href="${X.edit}" target=_blank>구글 문서에서 열기</a>`}
+  try{X=await rpc('exportDoc',SID);
+    $('#dl').innerHTML=`<a href="#" onclick="sv('docx');return false">Word(.docx) 받기</a> · <a href="#" onclick="sv('xlsx');return false">Excel 받기</a>`}
   catch(e){$('#dl').textContent=e.message}
 }
 function sv(k){
