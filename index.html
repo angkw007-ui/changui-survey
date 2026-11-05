@@ -81,14 +81,16 @@ body{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* ★ 앱스크립트 웹 앱 URL(…/exec)을 아래에 붙여 넣으세요 */
-const API='https://script.google.com/macros/s/AKfycbyn00-JcJ_rjqZ9iF2bBM28r0Ubm1NoraN8ABb-nQfzvW-t2fTL8myT3vwAMhfMzNUoXQ/exec';
+const API='https://script.google.com/macros/s/AKfycbyffSYvARfIOIHzXVj6Lt5crHSrw50s-fZ67UAGHhZTijbOwvK25reOzJO2Ay06wCgZ/exec';
 const DEV=localStorage.getItem('dev')||(()=>{const v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('dev',v);return v})();
 let TOK=sessionStorage.getItem('tok')||'';
 async function rpc(fn,...args){
   let r;
   try{r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args,tok:TOK,dev:DEV})})}
   catch(e){throw new Error('서버에 연결할 수 없습니다. 인터넷 연결과 API 주소를 확인해 주세요.')}
-  const j=await r.json();
+  let j;
+  try{j=JSON.parse(await r.text())}
+  catch(e){throw new Error('서버 응답이 올바르지 않습니다. 앱스크립트 배포의 액세스 권한이 "모든 사용자"인지, 주소가 /exec 로 끝나는 최신 배포 주소인지 확인해 주세요.')}
   if(!j.ok)throw new Error(j.error);
   return j.data;
 }
