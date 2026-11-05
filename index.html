@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko"><head><link rel="preconnect" href="https://script.google.com"><title>창의예중 설문 웹앱</title><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--navy:#4a2433;--navy2:#d9779a;--gold:#d9577e;--hero:#fde9ef;--bg:#fbf4f6;--line:#f1dce3;--tint:#fcdfe8;--t:#2d1a22;--m:#7a6670}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.65 'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;color:var(--t);background:var(--bg)}
+.shell{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+.side{background:#fff;border-right:1px solid var(--line);padding:28px 20px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-size:21px;font-weight:800;line-height:1.3;color:var(--navy);margin-bottom:26px}
+.brand small{display:block;font-size:12px;font-weight:500;color:var(--m);margin-bottom:4px}
+.side nav{display:flex;flex-direction:column;gap:2px;margin-bottom:18px}
+.side nav a{padding:9px 12px;border-radius:8px;cursor:pointer;color:#344054;font-size:14px}
+.side nav a:hover{background:var(--bg)}
+.side nav a.on{background:var(--tint);color:var(--navy);font-weight:700}
+.side nav.sub{border-top:1px solid var(--line);padding-top:14px}
+main{padding:24px 28px 60px;max-width:900px;width:100%}
+.hero{background:var(--hero);border:1px solid #f6cfdb;color:var(--navy);border-radius:16px;padding:30px 32px;margin-bottom:24px}
+.hero .tags{display:flex;justify-content:space-between;font-size:12px;margin-bottom:18px}
+.hero .tags span{background:rgba(217,87,126,.12);border-radius:999px;padding:2px 12px}
+.hero .gold{color:#b83256;font-weight:700;font-size:14px}
+.hero h1{font-size:34px;line-height:1.25;margin:4px 0 10px}
+.hero p{margin:0 0 16px;color:#6b4552}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips span{border:1px solid #efbccb;background:#fff;border-radius:999px;padding:3px 12px;font-size:13px;color:#8a3a55}
+h2{font-size:19px;margin:26px 0 12px;color:var(--navy)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin:0 0 14px}
+.card.tint{background:var(--tint)}
+.card small{color:var(--m);font-size:12px;display:block;margin-bottom:2px}
+.card h3{margin:0 0 12px;font-size:17px;color:var(--navy)}
+input,select,textarea{width:100%;padding:9px 10px;border:1px solid #e6cbd4;border-radius:8px;font:inherit;background:#fff}
+input:focus,select:focus,textarea:focus,button:focus-visible,.side a:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+input[type=radio],input[type=checkbox]{width:20px;height:20px;margin-right:8px;vertical-align:middle;accent-color:var(--gold)}
+label{display:block;margin:5px 0}
+button{padding:9px 16px;border:1px solid #e6cbd4;background:#fff;border-radius:8px;cursor:pointer;font:inherit;color:var(--navy)}
+button.p{background:var(--gold);border-color:var(--gold);font-weight:700;color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pdfbtn button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.modal{position:fixed;inset:0;background:rgba(45,26,34,.5);display:none;align-items:center;justify-content:center;z-index:9}
+.mbox{background:#fff;border-radius:12px;width:min(980px,95vw);height:92vh;padding:12px;display:flex;flex-direction:column;gap:8px}
+.mbox iframe{flex:1;width:100%;border:1px solid var(--line);border-radius:8px}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid var(--line);padding:7px 10px;text-align:left}th{background:#fdf1f5}
+.bar{background:#f7e6ec;border-radius:4px;height:14px}
+.bar i{display:block;height:100%;background:var(--navy2);border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.req{color:#c2410c;font-weight:700}.m{color:var(--m);font-size:13px}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}.tw table{min-width:440px}
+.lnk{padding:10px 14px;border:1px solid #e6cbd4;border-radius:8px;color:var(--navy);text-decoration:none}
+body{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+@media(max-width:760px){
+  html{scroll-padding-top:120px}
+  body{font-size:16px}
+  .shell{display:block}
+  .side{position:sticky;top:0;z-index:5;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 14px 6px;overflow:visible}
+  .brand{font-size:17px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand small{display:none}
+  .side nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:4px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
+  .side nav a{white-space:nowrap;padding:10px 14px;font-size:15px}
+  .side nav.sub{border-top:0;padding-top:0;margin-bottom:6px}
+  main{padding:14px 14px calc(40px + env(safe-area-inset-bottom))}
+  .hero{padding:20px;border-radius:14px;margin-bottom:16px}.hero h1{font-size:25px}
+  .hero .tags{flex-wrap:wrap;gap:6px}
+  h2{font-size:18px;margin:20px 0 10px}
+  .card{padding:16px}
+  input,select,textarea{font-size:16px;padding:12px}
+  button{min-height:44px;padding:10px 16px}
+  .card label{padding:8px 2px}
+  .card .row>button{flex:1}
+  .big{width:100%;padding:15px;font-size:17px}
+  .lb{width:100%!important}
+  .modal{align-items:stretch}
+  .mbox{width:100vw;height:100dvh;border-radius:0;padding:10px 10px calc(10px + env(safe-area-inset-bottom))}
+}
+@media print{body{background:#fff}.shell{display:block}.np{display:none!important}main{padding:0;max-width:none}.card{break-inside:avoid;border-color:#999}}
+#lg{align-items:center}#lg .mbox{width:min(340px,92vw);height:auto;border-radius:12px;padding:20px;gap:12px}
+</style></head><body><div id="app" style="padding:24px">불러오는 중…</div>
+<div id="lg" class="modal np" onclick="if(event.target==this)this.style.display='none'"><div class="mbox" role="dialog" aria-modal="true"><b>관리자 확인</b><input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호" onkeydown="if(event.key=='Enter')doLogin()"><div class="row"><button onclick="$('#lg').style.display='none'">취소</button><button class="p" onclick="doLogin()">확인</button></div></div></div>
+<div id="vw" class="modal np" onclick="if(event.target==this)closeV()"><div class="mbox" role="dialog" aria-modal="true"><div class="row"><b id="vt" style="flex:1"></b><a id="vo" class="lnk" target="_blank">새 창에서 열기</a><button onclick="closeV()">닫기</button></div><iframe id="pv" title="검토 자료"></iframe></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ★ 앱스크립트 웹 앱 URL(…/exec)을 아래에 붙여 넣으세요 */
+const API='여기에_웹앱_URL을_붙여넣으세요';
+const DEV=localStorage.getItem('dev')||(()=>{const v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('dev',v);return v})();
+let TOK=sessionStorage.getItem('tok')||'';
+async function rpc(fn,...args){
+  let r;
+  try{r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args,tok:TOK,dev:DEV})})}
+  catch(e){throw new Error('서버에 연결할 수 없습니다. 인터넷 연결과 API 주소를 확인해 주세요.')}
+  const j=await r.json();
+  if(!j.ok)throw new Error(j.error);
+  return j.data;
+}
+const T={short:'단답형',long:'장문형',radio:'객관식(단일 선택)',check:'체크박스(복수 선택)',select:'드롭다운',scale:'선형 배율',date:'날짜'};
+let D,mode='survey',tab='set',R;
+/* 빠른 첫 화면: 지난번 받아 둔 설문을 먼저 보여 주고, 최신 내용은 뒤에서 갱신 */
+let cached=null;
+try{cached=localStorage.getItem('pub');if(cached){D=JSON.parse(cached);D.admin=false;render()}}catch(e){cached=null}
+rpc('init').then(d=>{
+  const sig=JSON.stringify(Object.assign({},d,{admin:false}));
+  try{localStorage.setItem('pub',sig)}catch(e){}
+  if(sig!==cached){D=d;render()}else D.admin=d.admin;
+}).catch(e=>{if(!D)$('#app').textContent=e.message});
+const go=id=>{const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})};
+
+function render(){
+  const adm=mode=='admin';
+  const nav=adm?[['set','설문 설정'],['q','문항 편집'],['mat','자료 관리'],['res','결과 보기']].map(([k,l])=>`<a tabindex=0 class="${tab==k?'on':''}" onclick="tab='${k}';render()">${l}</a>`).join('')
+    :(D.mats.length&&!D.st.msg?`<a tabindex=0 onclick="go('sec-mat')">검토 자료</a>`:'')+(D.st.msg?'':`<a tabindex=0 onclick="go('sec-q')">의견 작성</a>`);
+  $('#app').removeAttribute('style');
+  $('#app').innerHTML=`<div class=shell><aside class="side np"><div class=brand><small>${adm?'관리자 모드':'창의예중 설문 웹앱'}</small>${esc(D.cfg.title)}</div><nav>${nav}</nav><nav class=sub><a tabindex=0 onclick="toggleAdmin()">${adm?'참여자 화면 보기':'관리자 모드'}</a>${adm?`<a tabindex=0 onclick="logout()">로그아웃</a>`:''}</nav></aside><main>${adm?admin():survey()}</main></div>`;
+  if(adm&&tab=='res')showRes();
+}
+
+/* ===== 참여자 화면 ===== */
+function survey(){
+  const c=D.cfg,end=c.end?'마감 '+c.end.replace('T',' '):'';
+  let h=`<section class=hero><div class=tags><span>창의예중 설문 웹앱</span>${end?`<span>${esc(end)}</span>`:'<span></span>'}</div>
+    <div class=gold>${D.mats.length?'자료를 읽고 의견을 남겨 주세요':'의견을 남겨 주세요'}</div><h1>${esc(c.title)}</h1>
+    <p>${esc(c.desc).replace(/\n/g,'<br>')}</p><div class=chips><span>검토 자료 ${D.mats.length}건</span><span>질문 ${D.qs.length}개</span>${c.once=='Y'?'<span>1인 1회</span>':''}<span>${c.anon=='Y'?'무기명':'기명'}</span></div></section>`;
+  if(D.st.msg)return h+`<div class=card>${esc(D.st.msg)}</div>`;
+  if(D.mats.length)h+=`<h2 id=sec-mat>검토 자료</h2><div class=card>${D.mats.map((m,i)=>`<div class=row style="margin:6px 0"><span style="flex:1">${esc(m.name)}</span><button onclick="openV(${i})">자료 보기</button></div>`).join('')}<p class=m>"자료 보기"를 누르면 창이 열립니다.</p></div>`;
+  h+=`<h2 id=sec-q>의견 작성</h2>`+idCard()+D.qs.map((q,i)=>`<div class=card><small>질문 ${i+1}${q.required?' · <span class=req>필수</span>':''}</small><h3>${esc(q.title)}</h3>${inp(q)}</div>`).join('');
+  return h+`<button class="p big" onclick=send()>의견 제출</button>`;
+}
+function openV(i){
+  const m=D.mats[i];
+  $('#vt').textContent=m.name;
+  $('#pv').src='https://drive.google.com/file/d/'+m.id+'/preview';
+  $('#vo').href='https://drive.google.com/file/d/'+m.id+'/view';
+  $('#vw').style.display='flex';
+}
+function closeV(){$('#vw').style.display='none';$('#pv').src='about:blank'}
+document.addEventListener('keydown',e=>{if(e.key=='Escape'){closeV();$('#lg').style.display='none'}});
+/* 관리자 로그인 */
+function toggleAdmin(){
+  if(mode=='admin'){mode='survey';render();scrollTo(0,0)}
+  else if(D.admin){mode='admin';tab='set';render();scrollTo(0,0)}
+  else{$('#lg').style.display='flex';setTimeout(()=>$('#pw').focus(),50)}
+}
+async function doLogin(){
+  try{TOK=await rpc('login',$('#pw').value);sessionStorage.setItem('tok',TOK);D=await rpc('init');$('#pw').value='';$('#lg').style.display='none';mode='admin';tab='set';render();scrollTo(0,0)}
+  catch(e){alert(e.message||e);$('#pw').value=''}
+}
+async function logout(){try{await rpc('logout')}catch(e){}TOK='';sessionStorage.removeItem('tok');try{D=await rpc('init')}catch(e){}mode='survey';render();scrollTo(0,0)}
+/* 기명 / 무기명: 관리자 설정에 따름 */
+function idCard(){
+  if(D.cfg.anon=='Y')return `<div class=card><small>응답자 표시</small><h3>무기명 설문입니다</h3><p class=m style="margin:0">이름이 기록되지 않습니다.</p></div>`;
+  return `<div class=card><small>응답자 표시 · <span class=req>필수</span></small><h3>이름</h3><input id=nm placeholder="이름을 입력하세요" maxlength=30><p class=m style="margin:8px 0 0">기명 설문입니다. 입력한 이름은 관리자에게 보입니다.</p></div>`;
+}
+function who(){return {mode:D.cfg.anon=='Y'?'anon':'named',name:($('#nm')||{}).value||''}}
+function inp(q){
+  const n=`data-q="${q.id}"`;
+  switch(q.type){
+    case 'long':return `<textarea rows=4 ${n}></textarea>`;
+    case 'date':return `<input type=date ${n}>`;
+    case 'select':return `<select ${n}><option value="">선택</option>${q.options.map(o=>`<option>${esc(o)}</option>`).join('')}</select>`;
+    case 'radio':case 'check':return q.options.map(o=>`<label><input type=${q.type=='radio'?'radio':'checkbox'} name="${q.id}" ${n} value="${esc(o)}">${esc(o)}</label>`).join('');
+    case 'scale':{let s='';for(let v=+q.min;v<=+q.max;v++)s+=`<label style="text-align:center;margin:0 6px"><input type=radio name="${q.id}" ${n} value="${v}" style="margin:0"><br>${v}</label>`;
+      return `<div class=row><span class=m>${esc(q.minL)}</span>${s}<span class=m>${esc(q.maxL)}</span></div>`}
+    default:return `<input ${n}>`;
+  }
+}
+function collect(){
+  const a={};
+  D.qs.forEach(q=>{
+    const els=[...document.querySelectorAll(`[data-q="${q.id}"]`)];
+    if(q.type=='check')a[q.id]=els.filter(e=>e.checked).map(e=>e.value);
+    else if(q.type=='radio'||q.type=='scale'){const e=els.find(e=>e.checked);a[q.id]=e?e.value:''}
+    else a[q.id]=els[0].value;
+  });
+  return a;
+}
+async function send(){
+  try{const r=await rpc('submit',collect(),who());$('#app').innerHTML=`<div class=shell><main><section class=hero><div class=gold>제출 완료</div><h1>제출되었습니다</h1><p>${esc(r)}</p></section></main></div>`}
+  catch(e){alert(e.message||e)}
+}
+
+/* ===== 관리자 화면 ===== */
+function admin(){
+  const title={set:'설문 설정',q:'문항 편집',mat:'자료 관리',res:'결과 보기'}[tab];
+  return `<h2 class=np style="margin-top:4px">${title}</h2><div id=pane>${{set:setUI,q:qUI,mat:matUI,res:()=>'<div class=card>불러오는 중…</div>'}[tab]()}</div>`;
+}
+/* 네이버폼 설문 설정 항목: 응답 기간, 응답 수 제한, 1인 1회, 응답자 정보 수집, 완료 메시지 */
+const SF=[['title','설문 제목','text'],['desc','설문 설명','area'],['start','응답 시작 일시','datetime-local'],['end','응답 마감 일시','datetime-local'],['limit','응답 수 제한 (0 = 제한 없음)','number'],['done','제출 완료 메시지','text']];
+const SC=[['once','1인 1회만 응답']];
+function setUI(){
+  const c=D.cfg;
+  return `<div class=card>${SF.map(([k,l,t])=>`<label>${l}${t=='area'?`<textarea rows=3 id=f_${k}>${esc(c[k])}</textarea>`:`<input type=${t} id=f_${k} value="${esc(c[k])}">`}</label>`).join('')}${SC.map(([k,l])=>`<label><input type=checkbox id=f_${k} ${c[k]=='Y'?'checked':''}>${l}</label>`).join('')}<label>응답자 표시 방식<select id=f_anon>${[['N','기명 (참여자가 이름을 입력)'],['Y','무기명 (이름을 기록하지 않음)']].map(([v,l])=>`<option value=${v} ${c.anon==v?'selected':''}>${l}</option>`).join('')}</select></label><br><button class=p onclick=saveSet()>설정 저장</button></div>`;
+}
+async function saveSet(){
+  const o={};SF.forEach(([k])=>o[k]=$('#f_'+k).value);SC.forEach(([k])=>o[k]=$('#f_'+k).checked?'Y':'N');o.anon=$('#f_anon').value;
+  try{await rpc('saveCfg',o);D.cfg=o;alert('저장되었습니다.')}catch(e){alert(e.message||e)}
+}
+function qUI(){
+  const nq=`D.qs.push({id:'q'+Date.now(),type:'radio',title:'',required:false,options:['옵션 1','옵션 2'],min:1,max:5,minL:'',maxL:''});render()`;
+  return D.qs.map((q,i)=>`<div class=card><div class=row>
+    <select style="width:auto" onchange="D.qs[${i}].type=this.value;render()">${Object.entries(T).map(([k,v])=>`<option value=${k} ${q.type==k?'selected':''}>${v}</option>`).join('')}</select>
+    <label style="margin:0"><input type=checkbox ${q.required?'checked':''} onchange="D.qs[${i}].required=this.checked">필수</label>
+    <span style="flex:1"></span><button onclick="mv(${i},-1)">위로</button><button onclick="mv(${i},1)">아래로</button><button onclick="D.qs.splice(${i},1);render()">삭제</button></div>
+    <input style="margin-top:8px" placeholder="질문을 입력하세요" value="${esc(q.title)}" oninput="D.qs[${i}].title=this.value">
+    ${['radio','check','select'].includes(q.type)?`<textarea rows=4 style="margin-top:8px" placeholder="보기를 한 줄에 하나씩 입력" oninput="D.qs[${i}].options=this.value.split('\\n').map(s=>s.trim()).filter(Boolean)">${esc(q.options.join('\n'))}</textarea>`:''}
+    ${q.type=='scale'?`<div class=row style="margin-top:8px">시작<select style="width:70px" onchange="D.qs[${i}].min=+this.value"><option ${q.min==0?'selected':''}>0</option><option ${q.min==1?'selected':''}>1</option></select>끝<input type=number min=2 max=10 style="width:70px" value="${q.max}" oninput="D.qs[${i}].max=+this.value"><input class=lb style="width:40%" placeholder="시작 라벨 (예: 매우 반대)" value="${esc(q.minL)}" oninput="D.qs[${i}].minL=this.value"><input class=lb style="width:40%" placeholder="끝 라벨 (예: 매우 찬성)" value="${esc(q.maxL)}" oninput="D.qs[${i}].maxL=this.value"></div>`:''}</div>`).join('')
+  +`<div class=row><button onclick="${nq}">질문 추가</button><button class=p onclick=saveQ()>문항 저장</button></div>`;
+}
+function mv(i,d){const j=i+d;if(j<0||j>=D.qs.length)return;[D.qs[i],D.qs[j]]=[D.qs[j],D.qs[i]];render()}
+async function saveQ(){try{await rpc('saveQs',D.qs);alert('저장되었습니다.')}catch(e){alert(e.message||e)}}
+
+function matUI(){
+  return `<div class=card><h3>PDF 자료 올리기</h3><input type=file id=pf accept=application/pdf multiple><br><br><button class=p onclick=up()>업로드</button><p class=m>파일당 10MB 이하를 권장합니다. 올린 파일은 같은 학교 계정 사용자에게 보기 권한으로 공유됩니다.</p></div>
+  <div class=card><h3>등록된 자료</h3>${D.mats.map(m=>`<div class=row style="margin:6px 0"><span style="flex:1">${esc(m.name)}</span><button onclick="del('${m.id}')">삭제</button></div>`).join('')||'<p class=m>등록된 자료가 없습니다.</p>'}</div>`;
+}
+async function up(){
+  const fs=[...$('#pf').files];if(!fs.length)return alert('파일을 선택해 주세요.');
+  for(const f of fs){
+    const b=await new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result.split(',')[1]);x.readAsDataURL(f)});
+    try{D.mats=await rpc('uploadFile',f.name,b)}catch(e){return alert(e.message||e)}
+  }
+  render();
+}
+async function del(id){if(confirm('이 자료를 삭제할까요?')){D.mats=await rpc('delFile',id);render()}}
+
+/* 결과: 표 + 막대그래프 */
+async function showRes(){
+  try{R=await rpc('results')}catch(e){$('#pane').innerHTML=`<div class=card>${esc(e.message||e)}</div>`;return}
+  $('#pane').innerHTML=`<div class="card tint np row"><button onclick=print()>인쇄 / PDF 저장</button><button class=p onclick=dl()>한글·워드용 파일 만들기</button><span id=dl class=m></span></div>
+  <div class=card><h3>${esc(D.cfg.title)} - 결과</h3>총 응답 <b>${R.total}</b>건</div>`+
+  R.items.map((t,i)=>`<div class=card><small>질문 ${i+1} · ${t.n}명 응답</small><h3>${esc(t.q.title)}</h3>${t.counts?
+    `<div class=tw><table><tr><th>항목</th><th style="width:70px">응답수</th><th style="width:70px">비율</th><th style="width:35%">그래프</th></tr>${t.counts.map(([k,v])=>{const p=t.n?Math.round(v/t.n*1000)/10:0;return `<tr><td>${esc(k)}</td><td>${v}</td><td>${p}%</td><td><div class=bar><i style="width:${p}%"></i></div></td></tr>`}).join('')}</table></div>${t.avg!=null?`<p>평균 <b>${t.avg}</b></p>`:''}`
+    :`<table>${t.texts.map((x,j)=>`<tr><td style="width:40px">${j+1}</td><td>${esc(x).replace(/\n/g,'<br>')}</td></tr>`).join('')||'<tr><td>응답 없음</td></tr>'}</table>`}</div>`).join('');
+}
+let X;
+async function dl(){
+  $('#dl').textContent='파일을 만드는 중… (10~30초)';
+  try{X=await rpc('exportDoc');
+    $('#dl').innerHTML=`<a href="#" onclick="sv('docx');return false">Word(.docx) 받기</a> · <a href="#" onclick="sv('xlsx');return false">Excel 받기</a> · <a href="${X.edit}" target=_blank>구글 문서에서 열기</a>`}
+  catch(e){$('#dl').textContent=e.message}
+}
+function sv(k){
+  const mime={docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}[k];
+  const bin=atob(X[k]),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([u],{type:mime}));a.download=X.name+'.'+k;document.body.appendChild(a);a.click();a.remove();
+}
+</script></body></html>
